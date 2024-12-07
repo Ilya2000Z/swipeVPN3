@@ -10,6 +10,7 @@ const Images = {
     usa: require('./usa.png'),
     netherlands: require('./netherlands.png'),
     search: require('./search.png'),
+    more: require('./more.png'),
 };
 
 export default Images;
