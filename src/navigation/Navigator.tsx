@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
+import {createStackNavigator, StackNavigationOptions, TransitionPresets} from '@react-navigation/stack'
 import Home from '../screens/Home/Home.tsx';
 import About from '../screens/About.tsx';
 import {DrawerActions, NavigationContainer, useNavigation} from '@react-navigation/native';
@@ -13,6 +14,8 @@ type RootDrawerParamList = {
 };
 
 const Drawer = createDrawerNavigator<RootDrawerParamList>();
+const Stack = createStackNavigator();
+
 
 const CustomDrawerContent = (props) => {
     return (

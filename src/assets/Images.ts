@@ -11,6 +11,7 @@ const Images = {
     netherlands: require('./netherlands.png'),
     search: require('./search.png'),
     more: require('./more.png'),
+    mapPin: require('./mapPin.png'),
 };
 
 export default Images;

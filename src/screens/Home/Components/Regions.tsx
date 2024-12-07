@@ -1,11 +1,12 @@
 import React from 'react';
 import {Region} from '../../../Model';
-import {FlatList, Image, SectionList, StyleSheet, Text, View} from 'react-native';
+import {FlatList, Image, Pressable, SectionList, StyleSheet, Text, View} from 'react-native';
 import Images from '../../../assets/Images.ts';
 
 interface RegionsProps {
     regions?: Region[]
     plusRegions?: Region[]
+    onRegionClick: (region: Region) => void
 }
 
 const Regions: React.FC<RegionsProps> = (props: RegionsProps) => {
@@ -72,7 +73,9 @@ const Regions: React.FC<RegionsProps> = (props: RegionsProps) => {
                         <Text style={{color: 'gray'}}>{item.cities[0].name}</Text>
                     </View>
                     <View style={{flex: 1}}/>
-                    <Image tintColor={'white'} style={{width: 20, height: 20}} source={section.title === 'Plus Regions' ? Images.more : Images.arrowRight} />
+                    <Pressable onPress={() => props.onRegionClick(item)}>
+                        <Image tintColor={'white'} style={{width: 20, height: 20}} source={section.title === 'Plus Regions' ? Images.more : Images.arrowRight} />
+                    </Pressable>
                 </View>
                 <View
                     style={{

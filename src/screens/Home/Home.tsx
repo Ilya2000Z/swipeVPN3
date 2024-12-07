@@ -1,10 +1,12 @@
-import React from 'react';
+import React, {useMemo, useRef, useState} from 'react';
 import {Alert, View} from 'react-native';
 import { StyleSheet } from 'react-native';
 import SwipeSlider from '../../components/SwipeButton.tsx';
 import Regions from './Components/Regions.tsx';
 import {Region} from '../../Model';
 import Images from '../../assets/Images.ts';
+import BottomSheet, {BottomSheetView} from "@gorhom/bottom-sheet";
+import {SelectCity} from "../BottomSheetContent.tsx";
 
 const regions: Region[] = [
     {
@@ -101,14 +103,34 @@ const plusRegions: Region[] = [
 ];
 
 const Home = () => {
+    const sheetRef = useRef<BottomSheet>(null);
+    const [clickedRegion, setClickedRegion] = useState<Region>();
+
+    const onRegionClick = (region: Region) => {
+        setClickedRegion(region)
+        sheetRef.current?.snapToPosition('40%')
+    }
+
     return (
         <View style={{flex: 1, backgroundColor: 'black'}}>
-            <Regions regions={regions} plusRegions={plusRegions}/>
+            <Regions regions={regions} plusRegions={plusRegions} onRegionClick={onRegionClick}/>
             <SwipeSlider
                 text="Свайп!"
                 onCompleteRight={() => Alert.alert('Достигнут конец вправо!')}
                 onCompleteLeft={() => Alert.alert('Достигнут конец влево!')}
             />
+            <BottomSheet
+                handleStyle={{backgroundColor: '#1f1f1f'}}
+                handleIndicatorStyle={{backgroundColor: 'gray', width: 50}}
+                ref={sheetRef}
+                index={-1}
+                snapPoints={['40%']}
+                enablePanDownToClose={true}
+            >
+                <BottomSheetView style={{flex: 1, backgroundColor: '#1f1f1f'}}>
+                    <SelectCity region={clickedRegion}/>
+                </BottomSheetView>
+            </BottomSheet>
         </View>
     );
 };
