@@ -1,15 +1,19 @@
 import React from 'react';
-import Home from './screens/Home.tsx';
-import Quiz from './screens/Quiz.tsx';
-import StartScreen from './screens/StartScreen.tsx';
-import Onboarding from './screens/Onboarding.tsx';
-import {PaperProvider} from "react-native-paper";
+import 'react-native-gesture-handler';
+import Navigator from './navigation/Navigator.tsx';
+import {PaperProvider} from 'react-native-paper';
+import {StatusBar} from "react-native";
 
 function App(): React.JSX.Element {
   return (
+      // <GestureHandlerRootView style={{ flex: 1 }}>
       <PaperProvider>
-        <Onboarding />
+          <StatusBar
+          backgroundColor={'black'}
+          />
+          <Navigator />
       </PaperProvider>
+      // </GestureHandlerRootView>
   );
 }
 
