@@ -3,6 +3,7 @@ import * as Progress from 'react-native-progress';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import { RadioButton } from 'react-native-radio-buttons-group';
 import WorldSvg from '../assets/svg/world';
+import {Colors} from "../theme/Colors.ts";
 
 interface Question {
     question: string;
@@ -60,7 +61,7 @@ const Onboarding = () => {
             <Progress.Bar
                 width={400}
                 borderColor={'gray'}
-                color={'#E7FE55'}
+                color={Colors.mainColor}
                 style={styles.progress}
                 progress={progress}
             />
@@ -76,14 +77,14 @@ const Onboarding = () => {
                                 <WorldSvg />
                                 <Text style={{color: 'white', marginStart: 5}}>{item}</Text>
                             </View>
-                            <RadioButton borderColor={'#E7FE55'} containerStyle={{borderRadius: 12, backgroundColor: '#E7FE55'}} borderSize={1} id={index.toString()} onPress={setChecked} selected={index.toString() === checked}/>
+                            <RadioButton borderColor={Colors.mainColor} containerStyle={{borderRadius: 12, backgroundColor: '#E7FE55'}} borderSize={1} id={index.toString()} onPress={setChecked} selected={index.toString() === checked}/>
                         </View>
                     </TouchableOpacity>
                 )}
             />
             <TouchableOpacity style={{width: '100%', flex: 1, paddingStart: 20, paddingEnd: 20}} onPress={handleNext} disabled={checked === undefined}>
-                <View style={{width: '100%', height: 50, marginBottom: 100, borderRadius: 18, backgroundColor: checked === undefined ? 'gray' : '#E7FE55', justifyContent: 'center', alignItems: 'center'}}>
-                    <Text style={{color: 'black', fontSize: 25}}>Continue</Text>
+                <View style={{width: '100%', height: 50, marginBottom: 100, borderRadius: 18, backgroundColor: checked === undefined ? 'gray' : Colors.mainColor, justifyContent: 'center', alignItems: 'center'}}>
+                    <Text style={{color: Colors.mainBackground, fontSize: 25}}>Continue</Text>
                 </View>
             </TouchableOpacity>
         </View>

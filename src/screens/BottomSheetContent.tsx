@@ -1,10 +1,15 @@
 import React from 'react';
-import {FlatList, Image, Text, View} from "react-native";
-import {Region} from "../Model";
-import Images from "../assets/Images.ts";
+import {FlatList, Image, Text, View} from 'react-native';
+import {Region} from '../Model';
+import Images from '../assets/Images.ts';
 
 interface SelectCityProps {
     region?: Region;
+}
+
+interface SelectServerProps {
+    region?: Region;
+    city?: string
 }
 
 export const SelectCity: React.FC<SelectCityProps> = (props) => {
@@ -28,5 +33,18 @@ export const SelectCity: React.FC<SelectCityProps> = (props) => {
                </View>
            )} />
     </View>
-   )
+   );
+};
+
+export const SelectServer: React.FC<SelectServerProps> = (props) => {
+    return (
+        <View style={{padding: 10}}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text>{props.region?.country}</Text>
+            </View>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text>{props.city}</Text>
+            </View>
+        </View>
+    )
 }

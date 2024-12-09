@@ -1,12 +1,13 @@
-import React, {useMemo, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {Alert, View} from 'react-native';
 import { StyleSheet } from 'react-native';
 import SwipeSlider from '../../components/SwipeButton.tsx';
 import Regions from './Components/Regions.tsx';
 import {Region} from '../../Model';
 import Images from '../../assets/Images.ts';
-import BottomSheet, {BottomSheetView} from "@gorhom/bottom-sheet";
-import {SelectCity} from "../BottomSheetContent.tsx";
+import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
+import {SelectCity} from '../BottomSheetContent.tsx';
+import {Colors} from "../../theme/Colors.ts";
 
 const regions: Region[] = [
     {
@@ -107,12 +108,12 @@ const Home = () => {
     const [clickedRegion, setClickedRegion] = useState<Region>();
 
     const onRegionClick = (region: Region) => {
-        setClickedRegion(region)
-        sheetRef.current?.snapToPosition('40%')
-    }
+        setClickedRegion(region);
+        sheetRef.current?.snapToPosition('40%');
+    };
 
     return (
-        <View style={{flex: 1, backgroundColor: 'black'}}>
+        <View style={{flex: 1, backgroundColor: Colors.mainBackground}}>
             <Regions regions={regions} plusRegions={plusRegions} onRegionClick={onRegionClick}/>
             <SwipeSlider
                 text="Свайп!"
