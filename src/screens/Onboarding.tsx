@@ -4,10 +4,13 @@ import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import { RadioButton } from 'react-native-radio-buttons-group';
 import WorldSvg from '../assets/svg/world';
 import {Colors} from "../theme/Colors.ts";
+import {useNavigation} from '@react-navigation/native';
+import OnboardFinish from "./OnboardFinish.tsx"
 
 interface Question {
     question: string;
     answers: string[];
+    OnboardFinish: undefined;
 }
 
 const questions: Question[] = [
@@ -40,10 +43,9 @@ const questions: Question[] = [
     },
 ];
 
-const Onboarding = () => {
+const Onboarding = ({ navigation }) => {
     const [currentStep, setCurrentStep] = useState(0);
     const [checked, setChecked] = React.useState<undefined | string>(undefined);
-
     const currentQuestion = questions[currentStep];
     const progress = (currentStep + 1) / questions.length;
 
@@ -52,6 +54,7 @@ const Onboarding = () => {
             setCurrentStep(currentStep + 1);
             setChecked(undefined);
         } else {
+            navigation.navigate('OnboardFinish');
             console.log('Онбординг завершен!');
         }
     };
