@@ -12,20 +12,26 @@ const Place = ({isActive, onPress}) => {
     const dispatch = useDispatch()
     const serverState = useSelector(state => state.regionInfo.defaultVpn)
     const itemVpn = useSelector(state => state.regionInfo.vpnItem)
+    const [selectElement, setSelectElement] = useState({})
 
     const selectItem = () => {
         if (!Boolean(Object.keys(itemVpn).length)) {
             dispatch(setVpnItem(serverState))
+            setSelectElement(serverState)
         }
         // Add your selectItem logic here
     }
     useEffect(()=> {
+        // selectItem()
         if (Boolean(Object.keys(itemVpn).length)) {
-            dispatch(setDefailtVpn(itemVpn))
-        }
-    }, [itemVpn])
+            // dispatch(setDefailtVpn(itemVpn))
+            setSelectElement(itemVpn)
+            console.log('item ',selectElement)
+        }   else {
+            selectItem()
+        } 
+    }, [itemVpn, serverState])
     async function getCoordinates(ip) {
-        console.log(ip)
         const response = await fetch(`http://ip-api.com/json/${ip ? ip : serverState.ip}`);
         const data = await response.json();
         if (data.status === "success") {
@@ -40,19 +46,20 @@ const Place = ({isActive, onPress}) => {
         onPress();
         if(!isActive) {
             selectItem();
-            getCoordinates(itemVpn.ip)        }
+            getCoordinates(itemVpn.ip)
+        }
     }
   // const [fontsLoaded] = useFonts({
   //   "Montserrat-500": require("../../assets/fonts/Montserrat-Medium.ttf"),
   // });
 return (
 <View style={[styles.container, isActive ? styles.active : styles.disabled]} >
-    { serverState ? (
+    { Boolean(Object.keys(itemVpn).length) ? (
         <>
             <TouchableOpacity onPress={handlePress}>
                 <View style={styles.wrapper}>
-                    <SvgComponent url={serverState.img} widthStyle='34' heightStyle='34'/>
-                    <Text style={styles.text}>{serverState.city},{serverState.coutry_short}</Text>
+                    <SvgComponent url={selectElement.img} widthStyle='34' heightStyle='34'/>
+                    <Text style={styles.text}>{selectElement.city},{selectElement.coutry_short ? selectElement.coutry_short : selectElement.country_short}</Text>
                 </View>
             </TouchableOpacity>  
         </>

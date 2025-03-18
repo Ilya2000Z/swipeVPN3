@@ -16,7 +16,7 @@ const SvgComponent = (props: svgType) => {
       .then(response => response.text())
       .then(data => setSvgXml(data))
       .catch(error => console.error(error));
-  }, []);
+  }, [props.url]);
 
   return <View style={props.style ? styles.disable:''}>{svgXml ? <SvgXml xml={svgXml} width={props.widthStyle ? props.widthStyle: '44'} height={props.heightStyle ? props.heightStyle: '44'} /> : null}</View>;
 };

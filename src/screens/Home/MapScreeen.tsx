@@ -397,7 +397,7 @@ const MapScreen = ({ navigation }) => {
               ): null
             }    
             <View style={styles.containerDot}>
-                <MapDot city={startRegion.city} countryCode={startRegion.countryCode}/> 
+                <MapDot isActive={selectCountry} city={startRegion.city} countryCode={startRegion.countryCode}/> 
             </View>    
             <View style={styles.bottomWrapper}>
                 { !regionInfo?.connectState ? (
@@ -408,10 +408,6 @@ const MapScreen = ({ navigation }) => {
                 ): null
                 }
             </View>
-            {/* <View  style={styles.currentConnection}>
-				<CurrentLocationTimer countryName='Poland' cityName='Warsaw'/>
-				<SpeedDownloadUpload/>
-			</View> */}
             <View style={styles.swipecontainer}>
                 <View style={styles.swipe}>
                     <SwipeSlider

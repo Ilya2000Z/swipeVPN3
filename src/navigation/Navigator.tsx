@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import { Platform, StyleSheet } from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createStackNavigator, StackNavigationOptions, TransitionPresets, } from '@react-navigation/stack';
@@ -19,6 +19,7 @@ import Regions from '../screens/Regions.tsx';
 import ConnectionScreen from '../screens/ConnectionScreen.js';
 import Search from '../screens/Search.js';
 import Subscription from '../screens/Subscription.js';
+import { useSelector } from 'react-redux';
 
 type RootDrawerParamList = {
     Home: undefined;
@@ -26,7 +27,7 @@ type RootDrawerParamList = {
     Quiz: undefined;
     OnboardFinish: undefined;
     Onboarding: undefined;
-    MapScreeen: undefined;
+    MapScreen: undefined;
     Regions: undefined;
     ConnectionScreen: undefined;
     Search: undefined;
@@ -53,27 +54,45 @@ const Stack = createStackNavigator();
 const CustomDrawerContent = (props) => {
     return (
         <View style={styles.drawerContainer}>
-
             {/* Контейнер для пунктов меню */}
             <View style={styles.menuContainer}>
             <BlurView 
                 style={styles.blurContainer} // Применяем эффект размытия только к области меню
                 blurType="light"
-                blurAmount={41.1}
-                reducedTransparencyFallbackColor="white"
+                blurAmount={10}
+                reducedTransparencyFallbackColor=""
+                overlayColor="transparent"
+                blurRadius={25}
+                downsampleFactor={30}
             />
+             <BlurView 
+                style={styles.blurContainer} // Применяем эффект размытия только к области меню
+                blurType="light"
+                blurAmount={10}
+                reducedTransparencyFallbackColor=""
+                overlayColor="transparent"
+                blurRadius={24}
+                downsampleFactor={50}
+            />
+                 <BlurView 
+                style={styles.blurContainer} // Применяем эффект размытия только к области меню
+                blurType="light"
+                blurAmount={10}
+                reducedTransparencyFallbackColor=""
+                overlayColor="transparent"
+                blurRadius={24}
+                downsampleFactor={50}
+            />
+                 <DrawerPaper.Item
+                    onPress={() => props.navigation.closeDrawer()}
+                    right={() => <Image style={styles.icon} source={Images.cross} />}
+                    label={<Text style={styles.label}></Text>}
+                />
                 <DrawerPaper.Item
                     onPress={() => props.navigation.navigate('Subscription')}
                     right={() => <Image style={styles.icon} source={Images.arrowRight} />}
                     icon={() => <Image style={styles.icon} tintColor="white" source={Images.shield} />}
                     label={<Text style={styles.label}>Subscription</Text>}
-                />
-                <Divider style={styles.divider} />
-                <DrawerPaper.Item
-                    onPress={() => props.navigation.navigate('Settings')}
-                    right={() => <Image style={styles.icon} source={Images.arrowRight} />}
-                    icon={() => <Image  style={styles.icon} tintColor="white" source={Images.settings} />}
-                    label={<Text style={styles.label}>Settings</Text>}
                 />
                 <Divider style={styles.divider} />
                 <DrawerPaper.Item
@@ -96,6 +115,7 @@ const CustomDrawerContent = (props) => {
                     icon={() => <Image tintColor="white" source={Images.alertCricle} />}
                     label={<Text style={styles.label}>About Us</Text>}
                 />
+            
             </View>
         </View>
     );
@@ -125,6 +145,12 @@ const HeaderRight = () => {
 };
 
 const Navigator = () => {
+    const userInfo = useSelector(state => state.user);
+    const [firstScreen, setFirstScreen] = useState('Onboarding')
+    console.log('firstScreen ',firstScreen)
+    useEffect(()=> {
+        setFirstScreen(!userInfo.onBording ? 'Onboarding' : "MapScreen")
+    }, [userInfo.onBording])
     return (
     <NavigationContainer>
         {/*<Stack.Navigator>*/}
@@ -144,7 +170,7 @@ const Navigator = () => {
             headerTitleStyle: {
                 fontWeight: 'bold',
             },
-        }} drawerContent={(props) => <CustomDrawerContent {...props} /> } initialRouteName={'Onboarding'} >
+        }} drawerContent={(props) => <CustomDrawerContent {...props} /> } initialRouteName={ !userInfo.onBording ? 'Onboarding' : "MapScreen" } >
             <Drawer.Screen options={{
                 headerLeft: () => null, // Скрыть headerLeft
                 headerRight: () => null, // Скрыть headerRight
@@ -227,17 +253,17 @@ const Navigator = () => {
 const styles = StyleSheet.create({
     drawerContainer: {
         flex: 1,
+        width:'90%'
     },
     blurContainer: {
         ...StyleSheet.absoluteFillObject, // Применяем эффект размытия только к области меню
     },
     menuContainer: {
         flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.3)', // Полупрозрачный фон для плавного перехода
+        backgroundColor: 'rgba(24, 24, 24, 0.2)', // Полупрозрачный фон для плавного перехода
         paddingVertical: 10,
         paddingHorizontal: 15,
-        borderTopRightRadius: 20,
-        borderBottomRightRadius: 20,
+        zIndex:4
     },
     label: {
         color: '#ffffff',

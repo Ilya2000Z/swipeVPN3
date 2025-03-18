@@ -8,7 +8,6 @@ import SvgComponent from './GetSvg';
 import Ping from '../../assets/svg/ping';
 
 const CountryItem = (props) => {
-
 // const [fontsLoaded] = useFonts({
 // "Montserrat-700": require("../../assets/fonts/Montserrat-Bold.ttf"),
 //  "Montserrat-500": require("../../assets/fonts/Montserrat-Medium.ttf"),

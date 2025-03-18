@@ -5,9 +5,17 @@ import Honeycomb from  '../assets/svg/honeycomb.js'
 import ContinueButton from './UI/ContinueButton'
 import HoneycombAnimation from '../assets/svg/HoneycombAnimation.js';
 import { useEffect, useState } from 'react';
+import FastImage from 'react-native-fast-image';
+import axios from "axios";
+import { store } from '../store/store.js';
+import { useDispatch } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 
 const OnboardFinish = ( { navigation }) => {
     const [progresState, setProgresState] = useState(0.8)
+    const dispatch = useDispatch();
+    const state = store.getState();
+    const API_URL = "http://10.0.2.2:8080";
 //   const [fontsLoaded] = useFonts({
 //     "Montserrat-600": require("../assets/fonts/Montserrat-SemiBold.ttf"),
 //     "Montserrat-400": require("../assets/fonts/Montserrat-Regular.ttf"),
@@ -16,9 +24,27 @@ const OnboardFinish = ( { navigation }) => {
 useEffect(()=> {
     setTimeout(() => {
         setProgresState(1)
-    },2000)
+    },3500)
 }, [])
-const loadScen = () => {
+const loadScen = async () => {
+    try {
+        const response = await fetch(`${API_URL}/add-user`, { // Use correct IP for device/emulator
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                deviceid: state.counter.deviceId,
+                name: "Иван",
+                onbordInfo: "Завершен онбординг",
+            }),
+        });
+
+        const data = await response.json();
+        console.log("Response:", data);
+    } catch (error) {
+        console.error("Ошибка при проверке пользователя:", error);
+    }
     navigation.navigate('Subscription');
 }
 	return(
@@ -27,7 +53,12 @@ const loadScen = () => {
 			<Progress.Bar style={styles.progress} progress={progresState} width={null} color={'#E7FE55'} borderWidth={0} borderRadius={2} unfilledColor={'#566379'}/>
 			<View style={styles.Honeycomb}>
                 {/* <Honeycomb/> */}
-                <HoneycombAnimation />
+                {/* <HoneycombAnimation /> */}
+                <FastImage
+                    source={require('../assets/Honeycomb.gif')}
+                    style={styles.gif}
+                    resizeMode="contain" // Режим изменения размера
+                />
             </View>
 			<Text style={styles.text}>Configuring the configuration for your purposes</Text>
 			<ContinueButton isActive={progresState !=0.8} onPress={loadScen} />
@@ -47,6 +78,10 @@ const loadScen = () => {
 }
 
 const styles = StyleSheet.create({
+    gif: {
+        height: 273,
+        width: 250,
+    },
     container: {
         flex: 1,
         position: 'relative',

@@ -15,7 +15,8 @@ const Images = {
     star: require('./star.png'),
     help: require('./help.png'),
     externalLink: require('./external-link.png'),
-    alertCricle: require('./alert-circle.png')
+    alertCricle: require('./alert-circle.png'),
+    cross: require('./Cross.png')
 };
 
 export default Images;

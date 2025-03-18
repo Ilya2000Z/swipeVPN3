@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import * as Progress from 'react-native-progress';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import { RadioButton } from 'react-native-radio-buttons-group';
@@ -6,6 +6,7 @@ import WorldSvg from '../assets/svg/world';
 import {Colors} from "../theme/Colors.ts";
 import {useNavigation} from '@react-navigation/native';
 import OnboardFinish from "./OnboardFinish.tsx"
+import { useSelector } from 'react-redux';
 
 interface Question {
     question: string;
@@ -48,6 +49,7 @@ const Onboarding = ({ navigation }) => {
     const [checked, setChecked] = React.useState<undefined | string>(undefined);
     const currentQuestion = questions[currentStep];
     const progress = (currentStep + 1) / questions.length;
+    const userInfo = useSelector(state => state.user);
 
     const handleNext = () => {
         if (currentStep < questions.length - 1) {
@@ -58,6 +60,14 @@ const Onboarding = ({ navigation }) => {
             console.log('Онбординг завершен!');
         }
     };
+    useEffect(()=> {
+
+        // const [firstScreen, setFirstScreen] = useState('Onboarding')
+        // const navigation = useNavigation()
+        // console.log('firstScreen ',firstScreen)
+        // navigation.navigate(!userInfo.onBording ? 'Onboarding' : "MapScreen")
+        // setFirstScreen(!userInfo.onBording ? 'Onboarding' : "MapScreen")
+    }, [userInfo.onBording])
 
     return (
         <View style={styles.container}>

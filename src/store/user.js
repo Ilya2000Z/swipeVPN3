@@ -4,7 +4,7 @@ const userInfo = createSlice({
     name: 'user',
     initialState: { 
         userid: '' ,
-        onBording: false,
+        onBording: {},
         isFree: true
     },
     reducers: {

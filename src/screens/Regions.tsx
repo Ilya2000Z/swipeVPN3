@@ -30,9 +30,7 @@ const Regions = ({ navigation }) => {
     const [serverItemsPay, setServerItemsPay] = useState([]);
     const [selcetItemRgion, setSelectItemRegion] = useState()
     const openModal = (item: any) => {
-      console.log('open ', item)
       setSelectItemRegion(item)
-      console.log('select ', selcetItemRgion)
       runOnJS(setVisible)(true);
       translateY.value = withTiming(0); // Открыть модальное окно с анимацией
     };
@@ -129,7 +127,7 @@ const Regions = ({ navigation }) => {
           <View style={styles.modalBackground}>
             <GestureDetector gesture={swipeDown}>
               <Animated.View style={[styles.modal, animatedStyle]}>
-                <CitiesList countryName={selcetItemRgion}/>
+                <CitiesList countryName={selcetItemRgion} closeModal={closeModal}/>
               </Animated.View>
             </GestureDetector>
           </View>
@@ -147,7 +145,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modal: {
-    height: SCREEN_HEIGHT * 0.4,
+    height: SCREEN_HEIGHT* 0.4,
     backgroundColor: '#1F1F1F',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,

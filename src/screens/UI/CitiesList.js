@@ -7,9 +7,14 @@ import MapPin from '../../assets/svg/map-pin';
 import SvgComponent from './GetSvg';
 import Ping from '../../assets/svg/ping';
 import ArrowLeft from '../../assets/svg/arrowLeft';
+import { useDispatch, useSelector } from 'react-redux';
+import { setVpnItem } from '../../store/serverinfo';
+import { useNavigation } from '@react-navigation/native';
 
 const CitiesList = (props) => {
-
+const regionInfo = useSelector(state => state.regionInfo);
+const dispatch = useDispatch();
+const navigate = useNavigation()
 // const [fontsLoaded] = useFonts({
 // "Montserrat-700": require("../../assets/fonts/Montserrat-Bold.ttf"),
 //  "Montserrat-500": require("../../assets/fonts/Montserrat-Medium.ttf"),
@@ -24,13 +29,56 @@ const selectCityHandler = (item) => {
   }
  
 }
+const findAndConvertVPN = (data, searchCriteria) => {
+  let result = null;
 
+  // Поиск среди бесплатных серверов
+  if (data.isFree) {
+      result = data.isFree.find(server => 
+          (server.country_short === searchCriteria.country_short || server.coutry_short === searchCriteria.country_short) &&
+          server.id === searchCriteria.id &&
+          server.ip === searchCriteria.ip 
+      );
+
+      if (result) {
+          result = { ...result, city: result.city }; // Добавляем город
+      }
+  }
+
+  // Поиск среди платных серверов, если не найдено среди бесплатных
+  if (!result && data.pay) {
+      for (const country of data.pay) {
+          for (const city of country.cityItem) {
+              const foundServer = city.servers.find(server => 
+                  (server.country_short === searchCriteria.country_short || server.coutry_short === searchCriteria.country_short) &&
+                  server.id === searchCriteria.id &&
+                  server.ip === searchCriteria.ip
+              );
+              if (foundServer) {
+                  result = { ...foundServer, img: country.img, city: city.city }; // Добавляем город
+                  break;
+              }
+          }
+          if (result) break;
+      }
+  }
+
+  return result ? result : null;
+};
+
+const selectServer = (itemServer) => {
+  dispatch(setVpnItem(findAndConvertVPN(regionInfo.serverItems.payload, itemServer)))
+  props.closeModal()
+  navigate.navigate('MapScreen')
+}
 const renderServerItem = ({item}) => {
     return (
-    <View style={styles.cityWrapper}>
-      <Text style={[styles.serverCount, props.isSubscriptionActive && styles.opacity]}>{item.country_short} #{item.id}</Text>
-      <Ping />
-    </View>
+    <TouchableOpacity onPress={() => selectServer(item)}>
+      <View style={styles.cityWrapper}>
+        <Text style={[styles.serverCount, props.isSubscriptionActive && styles.opacity]}>{item.country_short} #{item.id}</Text>
+        <Ping />
+      </View>
+    </TouchableOpacity>
     )
 }
 
@@ -64,10 +112,10 @@ return (
         }
 			</View>
       { !selectcity ? (
-        <Text style={styles.citiesCount}>{props.countryName.cityItem.length} cities</Text>
+        <Text style={styles.citiesCount}>{props.countryName.cityItem?.length} cities</Text>
       ) : 
         <View style={styles.serversInfo}>
-           <Text style={styles.citiesCount}>{selectcity.server.length} servers</Text>
+           <Text style={styles.citiesCount}>{selectcity.server?.length} servers</Text>
            <Text style={styles.citiesCount}>Ping</Text>
         </View>
       }
