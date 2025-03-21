@@ -27,7 +27,7 @@ export const SelectCity: React.FC<SelectCityProps> = (props) => {
            <FlatList data={props.region?.cities} renderItem={({item}) => (
                <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 10}}>
                    <Image style={{width: 20, height: 20}} source={Images.mapPin}/>
-                   <Text style={{marginStart: 10, color: 'gray'}}>{item.name}</Text>
+                   <Text style={{marginStart: 10, color: 'gray'}}>{item.name + 12}</Text>
                    <View style={{flex: 1}}/>
                    <Image style={{width: 20, height: 20}} source={Images.more}/>
                </View>

@@ -22,7 +22,7 @@ return (
           <View
             style={[
               styles.textWrapper,
-              props.isFree === false && styles.disable,
+              !props.isSubscriptionActive && styles.disable,
             ]}
           >
             {props.countryName ? (<>
@@ -32,9 +32,9 @@ return (
               <Text style={[styles.textCity, props?.style]}>{props.cityName}</Text>
             </>): null}
           </View>
-            {props.ping===true && <Ping/>}
-            {(props.isFree==true && !props.ping && !props.more) && <ChevronRight style={styles.chevronRight}/>}
-            {props.isFree==false || props.more && <More/>}
+            {props.ping === true && <Ping/>}
+            {(props.isFree === true && !props.ping && !props.more) && <ChevronRight style={styles.chevronRight}/>}
+            {props.isFree === false || props.more && <More/>}
         </View>
       </View>
     </TouchableOpacity>
@@ -42,29 +42,33 @@ return (
     <View style={styles.container}>
      <View style={styles.container}>
         <View style={[styles.wrapper]}>
-          <SvgComponent url={props.flag} style={props.isFree === false} widthStyle={props.width} heightStyle={props.height} />
+          <SvgComponent url={props.flag} style={props.isSubscriptionActive === false} widthStyle={props.width} heightStyle={props.height} />
           <View
             style={[
               styles.textWrapper,
-              props.isFree === false && styles.disable,
+              props.isSubscriptionActive === false ? styles.disable  : null,
             ]}
           >
             {props.countryName ? (<>
               <Text style={[styles.textCountry, props?.style]}>{props.countryName}</Text>
-            </>): null}
+            </>)
+            :
+            null}
             {props.cityName ? (<>
               <Text style={[styles.textCity, props?.style]}>{props.cityName}</Text>
-            </>): null}
+            </>)
+            :
+            null}
           </View>
-          <TouchableOpacity  onPress={props.onPress}>
-            <More /> 
+          <TouchableOpacity onPress={props.onPress}>
+            <More />
           </TouchableOpacity>
         </View>
       </View>
     </View>
   )
-)
-}
+);
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -94,7 +98,7 @@ const styles = StyleSheet.create({
   },
 textCity: {
 	marginTop: 4,
-  color: '#fff',
+  // color: '#fff',
   fontFamily: 'Montserrat-400',
   fontSize: 16,
   fontWeight: 400,
@@ -108,7 +112,7 @@ chevronRight: {
 },
 disable: {
 	opacity: 0.6,
-}
-})
+},
+});
 
 export default CountryItem;

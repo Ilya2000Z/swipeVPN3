@@ -28,18 +28,18 @@ const MapScreen = ({ navigation }) => {
     const regionInfo = useSelector(state => state.regionInfo);
     const user = useSelector(state => state.user);
     const [opacity] = useState(new Animated.Value(0));  // Значение прозрачности для анимации
-    const vpnSelectedItem = useSelector(state => state.regionInfo.vpnItem)
+    const vpnSelectedItem = useSelector(state => state.regionInfo.vpnItem);
     const dispatch = useDispatch();
     // const [fontsLoaded] = useFonts({
     //     "Montserrat-600": require("../assets/fonts/Montserrat-SemiBold.ttf"),
     // });
     // const state = store.getState();
 
-    const startRegion = regionInfo.regionInformation.payload
+    const startRegion = regionInfo.regionInformation.payload;
     const mapViewRef = useRef(null); // Ссылка на MapView
     const [markerPosition, setMarkerPosition] = useState({
-        latitude: startRegion.lat,
-        longitude: startRegion.lon,
+        latitude: startRegion?.lat,
+        longitude: startRegion?.lon,
     });
     const [selectCountry, setSelectCountry] = useState(false)
     const [stateConnect, setStateConnect] = useState(false);

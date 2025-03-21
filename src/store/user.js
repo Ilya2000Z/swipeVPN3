@@ -2,21 +2,21 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const userInfo = createSlice({
     name: 'user',
-    initialState: { 
+    initialState: {
         userid: '' ,
         onBording: {},
-        isFree: true
+        isFree: true,
     },
     reducers: {
         setUserId: (state, action) => {
             state.userid = action.payload;
         },
         setOnbording: (state, action) => {
-            state.onBording = action.payload
+            state.onBording = action.payload;
         },
         setIsFree: (state, action) => {
-            state.isFree = action.payload
-        }
+            state.isFree = action.payload;
+        },
     },
 });
 

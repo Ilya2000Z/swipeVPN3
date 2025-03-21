@@ -19,69 +19,75 @@ import CurrentLocationTimer from './UI/CurrentLocationTimer.js';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
-const Regions = ({ navigation }) => {
-    const state = store.getState();
-    const regionItem = state.regionInfo.serverItems.payload as ResponseIP
-    const regionInfo = state.regionInfo
-    const [visible, setVisible] = useState(false);
-    const translateY = useSharedValue(SCREEN_HEIGHT);
-    const dispatch = useDispatch();
-    const [serverItemsFree, setServerItemsFree] = useState([]);
-    const [serverItemsPay, setServerItemsPay] = useState([]);
-    const [selcetItemRgion, setSelectItemRegion] = useState()
-    const openModal = (item: any) => {
-      setSelectItemRegion(item)
-      runOnJS(setVisible)(true);
-      translateY.value = withTiming(0); // Открыть модальное окно с анимацией
-    };
-    const currentConnection = useSelector(state => state.regionInfo.connectState);
-    // useEffect(()=> {
-    //   setCurrent(regionInfo.connectState)
-    //   console.log('curr', currentConnection)
-    //   return () => {
-    //     setCurrent(regionInfo.connectState)
-    //   }
-    // }, [regionInfo.connectState])
+const Regions = ({ navigation }:any) => {
+  const state = store.getState();
+  const {subscription} = state;
+  const regionItem = state.regionInfo.serverItems.payload as ResponseIP;
+  const regionInfo = state.regionInfo
+  const [visible, setVisible] = useState(false);
+  const translateY = useSharedValue(SCREEN_HEIGHT);
+  const dispatch = useDispatch();
+  const [serverItemsFree, setServerItemsFree] = useState([]);
+  const [serverItemsPay, setServerItemsPay] = useState([]);
+  const [selcetItemRgion, setSelectItemRegion] = useState();
+  const openModal = (item: any) => {
+    setSelectItemRegion(item)
+    runOnJS(setVisible)(true);
+    translateY.value = withTiming(0); // Открыть модальное окно с анимацией
+  };
+  console.log(state);
+  console.log(subscription);
+  const currentConnection = useSelector(state => state.regionInfo.connectState);
+  // useEffect(()=> {
+  //   setCurrent(regionInfo.connectState)
+  //   console.log('curr', currentConnection)
+  //   return () => {
+  //     setCurrent(regionInfo.connectState)
+  //   }
+  // }, [regionInfo.connectState])
 
-    const selectVpn = (id: number) => {
-      const vpnItem = regionItem.isFree.find((item) => item.id === id)
-      dispatch(setVpnItem(vpnItem))
-      const state = store.getState();
-      console.log(state.regionInfo.vpnItem.ip)
-      navigation.navigate('MapScreen')
-    }
-    useEffect(() => {
-      const freeItems = regionItem.isFree.map((item) => (
-        <CountryItem
-          key={item.id}
-          isFree={true}
-          countryName={item.country}
-          cityName={item.city}
-          flag={item.img}
-          onPress={() => selectVpn(item.id)} // Передаём функцию-обработчик
-        />
-      ));
-      setServerItemsFree(freeItems);
-    
-      const payItems = regionItem.pay.map((item, index) => (
-        <CountryItem
-          key={index}
-          isFree={false}
-          countryName={item.country}
-          cityName={`${item.cityItem.length} city`}
-          flag={item.img}
-          onPress={() => openModal(item)} // Передаём функцию-обработчик
-        />
-      ));
-      setServerItemsPay(payItems);
-    }, [regionItem]);  
-    const closeModal = () => {
-      translateY.value = withTiming(SCREEN_HEIGHT, {}, () => {
-        runOnJS(setVisible)(false); // Закрыть модальное окно
-      });
-    };
-    // Улучшенный свайп вниз
-    const swipeDown =  Gesture.Pan()
+  const selectVpn = (id: number) => {
+    const vpnItem = regionItem.isFree.find((item) => item.id === id);
+    dispatch(setVpnItem(vpnItem));
+    const state = store.getState();
+    console.log(state.regionInfo.vpnItem.ip);
+    navigation.navigate('MapScreen');
+  }
+  useEffect(() => {
+    const freeItems = regionItem.isFree.map((item) => (
+      <CountryItem
+        key={item.id}
+        isFree={true}
+        countryName={item.country}
+        cityName={item.city}
+        flag={item.img}
+        onPress={() => selectVpn(item.id)} // Передаём функцию-обработчик
+      />
+    ));
+    setServerItemsFree(freeItems);
+
+    const payItems = regionItem.pay.map((item, index) => (
+      <CountryItem
+        key={index}
+        isFree={false}
+        countryName={item.country}
+        cityName={`${item.cityItem.length} city`}
+        flag={item.img}
+        isSubscriptionActive={subscription.isPaid}
+        onPress={() => openModal(item)} // Передаём функцию-обработчик
+      />
+    ));
+    setServerItemsPay(payItems);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [regionItem, subscription]);
+
+  const closeModal = () => {
+    translateY.value = withTiming(SCREEN_HEIGHT, {}, () => {
+      runOnJS(setVisible)(false); // Закрыть модальное окно
+    });
+  };
+  // Улучшенный свайп вниз
+  const swipeDown = Gesture.Pan()
     .onUpdate((event) => {
       translateY.value = Math.max(0, event.translationY); // Перемещать вниз только до 0
     })
@@ -92,32 +98,34 @@ const Regions = ({ navigation }) => {
         translateY.value = withTiming(0); // Вернуть в исходное положение
       }
     });
-       // Анимационный стиль модального окна
+  // Анимационный стиль модального окна
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: translateY.value }],
   }));
-  
+
   return (
     <>
       <View style={styles.container}>
         <View style={styles.wrapper}>
-          <AdditionalRegions style={styles.additionalRegions}/>
+         {subscription.isPaid && <AdditionalRegions style={styles.additionalRegions} />}
           <ScrollView style={styles.scrollView}>
             <Text style={styles.blockTitle}>Regions</Text>
             {serverItemsFree}
-           
 
             <Text style={styles.blockTitle}>Plus Regions</Text>
             {serverItemsPay}
           </ScrollView>
-          { currentConnection ? (
+          {currentConnection ? (
             <>
-              <View  style={styles.currentConnection}>
-                <CurrentLocationTimer countryName={regionInfo.vpnItem.country} cityName={regionInfo.vpnItem.city} img={regionInfo.vpnItem.img}/>
-                <SpeedDownloadUpload/>
+              <View style={styles.currentConnection}>
+                <CurrentLocationTimer
+                  countryName={regionInfo.vpnItem.country}
+                  cityName={regionInfo.vpnItem.city}
+                  img={regionInfo.vpnItem.img} />
+                <SpeedDownloadUpload />
               </View>
             </>
-          ): null}
+          ) : null}
         </View>
       </View>
 
@@ -127,7 +135,7 @@ const Regions = ({ navigation }) => {
           <View style={styles.modalBackground}>
             <GestureDetector gesture={swipeDown}>
               <Animated.View style={[styles.modal, animatedStyle]}>
-                <CitiesList countryName={selcetItemRgion} closeModal={closeModal}/>
+                <CitiesList countryName={selcetItemRgion} closeModal={closeModal} isSubscriptionActive={subscription.isPaid} />
               </Animated.View>
             </GestureDetector>
           </View>
@@ -145,7 +153,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modal: {
-    height: SCREEN_HEIGHT* 0.4,
+    height: SCREEN_HEIGHT * 0.4,
     backgroundColor: '#1F1F1F',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -188,10 +196,10 @@ const styles = StyleSheet.create({
   },
   currentConnection: {
     position: 'absolute',
-    bottom:'5%',
+    bottom: '5%',
     padding: 16,
     borderRadius: 12,
-	  flexDirection: 'column',
+    flexDirection: 'column',
     backgroundColor: '#1E1E1E',
     alignItems: 'center',
     justifyContent: 'space-between',

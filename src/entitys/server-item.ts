@@ -15,22 +15,22 @@ interface ServersIP {
     city: string;
     img: string;
   }
-  
+
   interface Server {
     ip: string;
   }
-  
+
   interface CityItem {
     city: string;
     servers: Server[];
   }
-  
+
   interface PayCountry {
     country: string;
     cityItem: CityItem[];
     img: string; // Добавлено поле для URL картинки
   }
-  
+
  export interface ResponseIP {
     isFree: ServersIP[];
     pay: PayCountry[];
