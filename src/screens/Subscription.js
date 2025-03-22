@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateSubscription } from '../store/modules/subscription';
 import { TRIAL_DATE } from '../store/modules/subscription';
+import { TouchableOpacity } from 'react-native';
 
 const Subscription = ({ navigation }) => {
     const { width, height } = Dimensions.get('window');
@@ -53,7 +54,7 @@ const Subscription = ({ navigation }) => {
     };
 
     return (
-        <View style={styles.container}>\
+        <View style={styles.container}>
             <TouchableOpacity>
                 <ImageBackground style={[styles.background, { width, height }]}  resizeMode="cover" source={SubscriptionBackground} />
             </TouchableOpacity>
