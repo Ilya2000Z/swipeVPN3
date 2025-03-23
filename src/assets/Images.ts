@@ -16,7 +16,8 @@ const Images = {
     help: require('./help.png'),
     externalLink: require('./external-link.png'),
     alertCricle: require('./alert-circle.png'),
-    cross: require('./Cross.png')
+    cross: require('./Cross.png'),
+    dotsSwipe: require('./dotsSwipe.png')
 };
 
 export default Images;

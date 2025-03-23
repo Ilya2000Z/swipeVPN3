@@ -15,7 +15,9 @@ const OnboardFinish = ( { navigation }) => {
     const [progresState, setProgresState] = useState(0.8)
     const dispatch = useDispatch();
     const state = store.getState();
-    const API_URL = "http://10.0.2.2:8080";
+    const API_URL = "http://93.183.81.113:8080";
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0];
 //   const [fontsLoaded] = useFonts({
 //     "Montserrat-600": require("../assets/fonts/Montserrat-SemiBold.ttf"),
 //     "Montserrat-400": require("../assets/fonts/Montserrat-Regular.ttf"),
@@ -37,6 +39,7 @@ const loadScen = async () => {
                 deviceid: state.counter.deviceId,
                 name: "Иван",
                 onbordInfo: "Завершен онбординг",
+                date_trial: formattedDate
             }),
         });
 

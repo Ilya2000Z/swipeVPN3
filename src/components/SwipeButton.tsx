@@ -101,7 +101,7 @@ const SwipeSlider: React.FC<SwipeSliderProps> = ({
                 ]}
                 {...panResponder.panHandlers}
             >
-                <Image source={Images.dots}/>
+                <Image source={Images.dotsSwipe}/>
             </Animated.View>  
             { !disabled && isCountry ? (
                 <>

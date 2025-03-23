@@ -16,7 +16,7 @@ import { setOnbording, setUserId } from './store/user.js';
 
 function MainApp(): React.JSX.Element {
     const dispatch = useDispatch();
-    const API_URL = "http://10.0.2.2:8080";
+    const API_URL = "http://93.183.81.113:8080";
     const [loading, setLoading] = useState(true);
 
     async function getCoordinates(ip: string) {
