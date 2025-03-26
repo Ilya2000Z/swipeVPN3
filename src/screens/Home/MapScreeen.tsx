@@ -234,8 +234,8 @@ const MapScreen = ({ navigation }) => {
 
     useEffect(() => {
         setMarkerPosition({
-            latitude: startRegion.lat,
-            longitude: startRegion.lon,
+            latitude: startRegion?.lat,
+            longitude: startRegion?.lon,
         })
     }, [startRegion]);
     useEffect(() => {
@@ -367,13 +367,13 @@ const MapScreen = ({ navigation }) => {
                 pitchEnabled={false}
                 rotateEnabled={false}
                 initialRegion={{
-                  latitude: startRegion.lat,
-                  longitude: startRegion.lon,
+                  latitude: startRegion?.lat,
+                  longitude: startRegion?.lon,
                   latitudeDelta: 6.9922,
                   longitudeDelta: 6.9421,
                 }}
               >
-                {startRegion.longitude && (
+                {startRegion?.longitude && (
                   <Marker coordinate={startRegion}>
                     <View style={styles.dotMap}>
                       <Dot />
@@ -397,7 +397,7 @@ const MapScreen = ({ navigation }) => {
               ): null
             }    
             <View style={styles.containerDot}>
-                <MapDot isActive={selectCountry} city={startRegion.city} countryCode={startRegion.countryCode}/> 
+                <MapDot isActive={selectCountry} city={startRegion?.city} countryCode={startRegion?.countryCode}/> 
             </View>    
             <View style={styles.bottomWrapper}>
                 { !regionInfo?.connectState ? (
