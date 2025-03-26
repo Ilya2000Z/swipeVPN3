@@ -23,12 +23,12 @@ import {DrawerActions, useNavigation} from '@react-navigation/native';
 
 
 
-const MapScreen = ({ navigation }) => {
+const MapScreen = ({ navigation}:any) => {
 
-    const regionInfo = useSelector(state => state.regionInfo);
-    const user = useSelector(state => state.user);
-    const [opacity] = useState(new Animated.Value(0));  // Значение прозрачности для анимации
-    const vpnSelectedItem = useSelector(state => state.regionInfo.vpnItem);
+    const regionInfo = useSelector((state:any) => state.regionInfo);
+    const user = useSelector((state:any) => state.user);
+    const [opacity] = useState(new Animated.Value(0));  
+    const vpnSelectedItem = useSelector((state:any)=> state.regionInfo.vpnItem);
     const dispatch = useDispatch();
     // const [fontsLoaded] = useFonts({
     //     "Montserrat-600": require("../assets/fonts/Montserrat-SemiBold.ttf"),
@@ -85,27 +85,33 @@ const MapScreen = ({ navigation }) => {
             useNativeDriver: true,
         }).start();
     }, [])
-    useEffect(() => {
-        setServerIp(regionInfo?.vpnItem?.ip)
-        const observeVpn = async () => {
-                  if (Platform.OS === 'ios') {
-                    await RNSimpleOpenvpn.observeState();
-                  }
-                  addVpnStateListener((e) => {
-                      console.log('e', e)
-                    setVpnState(e);
-                  });
-                };
-            
-                observeVpn();
-            
-                return async () => {
-                  if (Platform.OS === 'ios') {
-                    await RNSimpleOpenvpn.stopObserveState();
-                  }
-                  removeVpnStateListener();
-                };
-    }, [regionInfo]);
+
+   useEffect(() => {
+    setServerIp(regionInfo?.vpnItem?.ip);
+
+    const observeVpn = async () => {
+        if (Platform.OS === 'ios') {
+            await RNSimpleOpenvpn.observeState();
+        }
+        addVpnStateListener((e: any) => {
+            console.log('e', e);
+            setVpnState(e);
+        });
+    };
+
+    observeVpn();
+
+    return () => {
+        const stopVpnObservation = async () => {
+            if (Platform.OS === 'ios') {
+                await RNSimpleOpenvpn.stopObserveState();
+            }
+            removeVpnStateListener();
+        };
+        stopVpnObservation();
+    };
+}, [regionInfo]);
+
     const HeaderLeft = () => {
         const navigation = useNavigation();
             const testClick = () => {
@@ -240,7 +246,7 @@ const MapScreen = ({ navigation }) => {
     }, [startRegion]);
     useEffect(() => {
         if (mapViewRef.current) {
-            mapViewRef.current.animateToRegion(
+            (mapViewRef.current as any).animateToRegion(
                 {
                     ...markerPosition,
                     latitudeDelta: 6.9922,

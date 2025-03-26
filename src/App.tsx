@@ -83,7 +83,7 @@ function MainApp(): React.JSX.Element {
                 console.error("Ошибка при загрузке данных:", error);
             } finally {
                 setLoading(false);
-                RNBootSplash.hide({ fade: true });
+                // RNBootSplash.hide({ fade: true });
             }
         };
 

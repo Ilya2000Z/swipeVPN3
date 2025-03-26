@@ -13,7 +13,7 @@
   BOOL ret = [super application:application didFinishLaunchingWithOptions:launchOptions];
     if (ret == YES)
     {
-      [RNSplashScreen show];
+      // [RNSplashScreen show]; // закомментируем эту строку
     }
   return ret;
 }
