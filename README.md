@@ -78,3 +78,44 @@ To learn more about React Native, take a look at the following resources:
 - [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
 - [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
 # swipeVPN3
+
+## Сборка APK
+
+Для автоматической сборки APK используйте следующие скрипты:
+
+1. `build-apk.bat` - для сборки обычного (неподписанного) APK
+2. `build-signed-apk.bat` - для сборки подписанного APK (требуется keystore файл)
+
+### Создание ключа для подписи APK
+
+```bash
+keytool -genkeypair -v -storetype PKCS12 -keystore android/app/swipevpn-release.keystore -alias swipevpn-key -keyalg RSA -keysize 2048 -validity 10000
+```
+
+После создания ключа необходимо обновить файл `android/gradle.properties`, добавив:
+
+```
+MYAPP_RELEASE_STORE_FILE=swipevpn-release.keystore
+MYAPP_RELEASE_KEY_ALIAS=swipevpn-key
+MYAPP_RELEASE_STORE_PASSWORD=*ваш_пароль*
+MYAPP_RELEASE_KEY_PASSWORD=*ваш_пароль*
+```
+
+И обновить `android/app/build.gradle`:
+
+```gradle
+signingConfigs {
+    release {
+        storeFile file(MYAPP_RELEASE_STORE_FILE)
+        storePassword MYAPP_RELEASE_STORE_PASSWORD
+        keyAlias MYAPP_RELEASE_KEY_ALIAS
+        keyPassword MYAPP_RELEASE_KEY_PASSWORD
+    }
+}
+buildTypes {
+    release {
+        signingConfig signingConfigs.release
+        ...
+    }
+}
+```
