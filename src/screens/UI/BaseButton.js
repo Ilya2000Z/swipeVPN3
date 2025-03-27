@@ -10,18 +10,18 @@ import Search from "../../assets/svg/search"
 const BaseButton = (props) => {
 return (
     <View>
-       <TouchableOpacity onPress={props.onPress}>
+       <TouchableOpacity>
           <View>
-          {props.theme==='menu' && <Pressable style={styles.svgWrapper}>
+          {props.theme==='menu' && <Pressable style={styles.svgWrapper} onPress={props.onPress}>
               <MenuSvg style={styles.svg} />
           </Pressable>}
-          { props.theme==='world' && <Pressable style={styles.svgWrapper}>
+          { props.theme==='world' && <Pressable style={styles.svgWrapper} onPress={props.onPress}>
               <WorldSvg style={styles.svg} />
           </Pressable>}
-          { props.theme==='exit' && <Pressable style={styles.svgWrapper}>
+          { props.theme==='exit' && <Pressable style={styles.svgWrapper} onPress={props.onPress}>
               <Exit style={styles.svg} />
           </Pressable>}
-          { props.theme==='search' && <Pressable style={styles.svgWrapper}>
+          { props.theme==='search' && <Pressable style={styles.svgWrapper} onPress={props.onPress}>
               <Search style={styles.svg} />
           </Pressable>}
           </View>
