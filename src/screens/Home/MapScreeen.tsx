@@ -119,68 +119,98 @@ const MapScreen = ({ navigation }) => {
             </TouchableOpacity>
         );
     };
-    const connectVpn = async () => {
-        // Запускаем анимацию затемнения
-        Animated.timing(opacity, {
-            toValue: 1,  // 80% затемнения
-            duration: 400,  // Длительность 0.4s
-            easing: Easing.ease,  // Плавное ускорение и замедление
-            useNativeDriver: true,
-        }).start();
-        let hashVpn = regionInfo?.vpnItem?.country + user.userid
-        try {
-            let filePath = `${RNFS.DocumentDirectoryPath}/vpnConfig/${hashVpn}`;
-            let filePathConect = `${RNFS.DocumentDirectoryPath}/vpnConfig/`;
-            // Проверяем, существует ли файл
-            const fileExists = await RNFS.exists(filePath);
-            console.log(filePath)
-            if (fileExists) {
-               await startOvpn(serverIp)
-                //    Alert.alert('Файл уже существует', `Конфигурационный файл ${hashVpn}.ovpn уже есть.`);
-              return;
-            }
-      
-            // Создаем папку, если её нет
-            let folderPath = `${RNFS.DocumentDirectoryPath}/vpnConfig`;
-            let folderExists = await RNFS.exists(folderPath);
-            if (!folderExists) {
-              await RNFS.mkdir(folderPath);
-            }
-      
-            // Отправляем запрос на создание файла
-            setIsDownloading(true);
-            let generateUrl = `http://10.0.2.2:8080/generate-ovpn`;
-            let generateBody = {
-              client_name: hashVpn,
-              server_ip: serverIp,
-            };
-            let generateResponse = await fetch(generateUrl, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(generateBody),
-            });
-            if (!generateResponse.ok) {
-                
-              throw new Error(`Ошибка при создании файла: ${generateResponse.statusText}`);
-            }
-      
-            // Загружаем файл на устройство
-            let downloadUrl = `http://10.0.2.2:8080/download-ovpn?client_name=${hashVpn}`;
-            await RNFS.downloadFile({
-              fromUrl: downloadUrl,
-              toFile: filePath,
-            }).promise;
-      
-            Alert.alert('Успех', `Файл ${hashVpn}.ovpn успешно загружен.`);
-          } catch (error) {
-            console.error('Ошибка:', error);
-          } finally {
-            setIsDownloading(false);
-          }
-        setStateConnect(true)
+const connectVpn = async () => {
+  // Запускаем анимацию затемнения
+  Animated.timing(opacity, {
+    toValue: 1, // 80% затемнения
+    duration: 400, // Длительность 0.4s
+    easing: Easing.ease, // Плавное ускорение и замедление
+    useNativeDriver: true,
+  }).start();
+
+  let hashVpn = regionInfo?.vpnItem?.country + user.userid;
+  let filePath = `${RNFS.DocumentDirectoryPath}/vpnConfig/${hashVpn}`;
+  let folderPath = `${RNFS.DocumentDirectoryPath}/vpnConfig`;
+
+  try {
+    // Проверяем, существует ли папка, если нет — создаем
+    let folderExists = await RNFS.exists(folderPath);
+    if (!folderExists) {
+      await RNFS.mkdir(folderPath);
     }
+
+    // Проверяем, существует ли файл конфигурации
+    const fileExists = await RNFS.exists(filePath);
+    if (fileExists) {
+      console.log(`Файл ${hashVpn}.ovpn уже существует.`);
+      await startOvpn(serverIp);
+      return;
+    }
+
+    // Отправляем запрос на создание файла
+    setIsDownloading(true);
+    let generateUrl = `http://192.168.50.181:8080/generate-ovpn`;
+    let generateBody = {
+      client_name: hashVpn,
+      server_ip: serverIp,
+    };
+
+    console.log('Отправка JSON:', JSON.stringify(generateBody));
+
+    fetch(generateUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(generateBody),
+    })
+      .then((generateResponse) => {
+        if (!generateResponse.ok) {
+          console.log('Ошибка генерации:', generateResponse);
+          throw new Error(`Ошибка при создании файла: ${generateResponse.statusText}`);
+        }
+        return generateResponse.json();
+      })
+      .then(async (data) => {
+        console.log('Файл успешно создан на сервере', data);
+
+        // Проверяем снова, не загрузили ли файл пока выполнялся запрос
+        if (await RNFS.exists(filePath)) {
+          console.log(`Файл ${hashVpn}.ovpn уже загружен.`);
+          await startOvpn(serverIp);
+          return;
+        }
+
+        // Загружаем файл
+        let downloadUrl = `http://192.168.50.181:8080/download-ovpn?client_name=${hashVpn}`;
+        console.log('Начало загрузки файла:', downloadUrl);
+
+        let downloadResult = await RNFS.downloadFile({
+          fromUrl: downloadUrl,
+          toFile: filePath,
+        }).promise;
+
+        if (downloadResult.statusCode === 200) {
+          console.log('Файл успешно загружен', filePath);
+          await startOvpn(serverIp);
+        } else {
+          console.error('Ошибка при загрузке файла:', downloadResult);
+          Alert.alert('Ошибка', 'Не удалось загрузить VPN-файл.');
+        }
+      })
+      .catch((error) => {
+        console.error('Произошла ошибка:', error);
+      })
+      .finally(() => {
+        setIsDownloading(false);
+      });
+
+    setStateConnect(true);
+  } catch (error) {
+    console.error('Ошибка:', error);
+  }
+};
+
 
 
     async function startOvpn(serverIp: any) {
