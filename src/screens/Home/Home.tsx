@@ -114,7 +114,12 @@ const Home = () => {
 
     return (
         <View style={{flex: 1, backgroundColor: Colors.mainBackground}}>
-            <Regions regions={regions} plusRegions={plusRegions} onRegionClick={onRegionClick}/>
+            <Regions 
+                regions={regions} 
+                plusRegions={plusRegions} 
+                onRegionClick={onRegionClick}
+                isSubscriptionActive
+            />
             <SwipeSlider
                 text="Свайп!"
                 onCompleteRight={() => Alert.alert('Достигнут конец вправо!')}

@@ -12,6 +12,12 @@ const Images = {
     search: require('./search.png'),
     more: require('./more.png'),
     mapPin: require('./mapPin.png'),
+    star: require('./star.png'),
+    help: require('./help.png'),
+    externalLink: require('./external-link.png'),
+    alertCricle: require('./alert-circle.png'),
+    cross: require('./Cross.png'),
+    dotsSwipe: require('./dotsSwipe.png')
 };
 
 export default Images;

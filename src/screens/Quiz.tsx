@@ -4,6 +4,7 @@ import { StyleSheet, FlatList } from 'react-native';
 import AnswerItem from '../components/AnswerItem';
 import WorldSvg from '../assets/svg/world.js';
 import ContinueButton from '../components/ContinueButton';
+import * as Progress from 'react-native-progress';
 
 const Quiz = () => {
   // const [fontsLoaded] = useFonts({
@@ -31,7 +32,7 @@ const Quiz = () => {
 	return(
 		<View style={styles.container}>
 			<View style={styles.wrapper}>
-{/*<ProgressBar progress={progress} width={300} />*/}
+<Progress.Bar style={styles.progress} progress={0.2} width={null} color={'#E7FE55'} borderWidth={0} borderRadius={2} unfilledColor={'#566379'}/>
     <Button title="Увеличить прогресс" onPress={increaseProgress}/>
 				<Text style={styles.title}>What will you use {'\n'} a VPN for?</Text>
 				            <FlatList
