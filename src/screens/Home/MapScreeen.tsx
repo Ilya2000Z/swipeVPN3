@@ -53,6 +53,7 @@ const MapScreen = ({ navigation }) => {
     const readOvpnFile = async (filePath: any) => {
     try {
         // Проверяем, существует ли файл
+        console.log('readFile ', filePath)
         const fileExists = await RNFS.exists(filePath);
         if (!fileExists) {
             throw new Error('Файл не найден');
@@ -135,6 +136,7 @@ const connectVpn = async () => {
   try {
     // Проверяем, существует ли папка, если нет — создаем
     let folderExists = await RNFS.exists(folderPath);
+    console.log('folderExists ', folderExists)
     if (!folderExists) {
       await RNFS.mkdir(folderPath);
     }
@@ -142,6 +144,7 @@ const connectVpn = async () => {
     // Проверяем, существует ли файл конфигурации
     const fileExists = await RNFS.exists(filePath);
     if (fileExists) {
+        console.log('filePath 222 ', filePath)
       console.log(`Файл ${hashVpn}.ovpn уже существует.`);
       await startOvpn(serverIp);
       return;
@@ -149,7 +152,7 @@ const connectVpn = async () => {
 
     // Отправляем запрос на создание файла
     setIsDownloading(true);
-    let generateUrl = `http://192.168.50.181:8080/generate-ovpn`;
+    let generateUrl = `http://93.183.81.113:8080/generate-ovpn`;
     let generateBody = {
       client_name: hashVpn,
       server_ip: serverIp,
@@ -182,7 +185,7 @@ const connectVpn = async () => {
         }
 
         // Загружаем файл
-        let downloadUrl = `http://192.168.50.181:8080/download-ovpn?client_name=${hashVpn}`;
+        let downloadUrl = `http://93.183.81.113:8080/download-ovpn?client_name=${hashVpn}`;
         console.log('Начало загрузки файла:', downloadUrl);
 
         let downloadResult = await RNFS.downloadFile({
@@ -215,7 +218,7 @@ const connectVpn = async () => {
 
     async function startOvpn(serverIp: any) {
         let hashVpn = regionInfo?.vpnItem?.country + user.userid;
-        let filePath = `${RNFS.DocumentDirectoryPath}/vpnConfig/${hashVpn}.ovpn`;
+        let filePath = `${RNFS.DocumentDirectoryPath}/vpnConfig/${hashVpn}`;
         console.log('filePath ', filePath)
         try {
             // Читаем содержимое файла
@@ -244,7 +247,7 @@ const connectVpn = async () => {
         try {
             await RNSimpleOpenvpn.disconnect();
                 // Запускаем анимацию возврата
-            Animated.timing(opacity, {
+                Animated.timing(opacity, {
                 toValue: 0,  // Убираем затемнение
                 duration: 400,  // Длительность 0.4s
                 easing: Easing.ease,  
