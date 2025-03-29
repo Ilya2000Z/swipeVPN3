@@ -13,6 +13,7 @@ const CountryItem = (props) => {
 //  "Montserrat-500": require("../../assets/fonts/Montserrat-Medium.ttf"),
 // "Montserrat-600": require("../../assets/fonts/Montserrat-SemiBold.ttf"),
 // });
+
 return (
   props.isFree === true ? (
     <TouchableOpacity onPress={props.onPress}>

@@ -30,13 +30,12 @@ const Regions = ({ navigation }:any) => {
   const [serverItemsFree, setServerItemsFree] = useState([]);
   const [serverItemsPay, setServerItemsPay] = useState([]);
   const [selcetItemRgion, setSelectItemRegion] = useState();
+
   const openModal = (item: any) => {
     setSelectItemRegion(item)
     runOnJS(setVisible)(true);
     translateY.value = withTiming(0); // Открыть модальное окно с анимацией
   };
-  console.log(state);
-  console.log(subscription);
   const currentConnection = useSelector(state => state.regionInfo.connectState);
   // useEffect(()=> {
   //   setCurrent(regionInfo.connectState)
@@ -49,9 +48,9 @@ const Regions = ({ navigation }:any) => {
   const selectVpn = (id: number) => {
     const vpnItem = regionItem.isFree.find((item) => item.id === id);
     dispatch(setVpnItem(vpnItem));
-    const state = store.getState();
-    console.log(state.regionInfo.vpnItem.ip);
+  
     navigation.navigate('MapScreen');
+
   }
   useEffect(() => {
     const freeItems = regionItem.isFree.map((item) => (
@@ -61,6 +60,7 @@ const Regions = ({ navigation }:any) => {
         countryName={item.country}
         cityName={item.city}
         flag={item.img}
+        isSubscriptionActive={subscription.isPaid}
         onPress={() => selectVpn(item.id)} // Передаём функцию-обработчик
       />
     ));
@@ -77,7 +77,12 @@ const Regions = ({ navigation }:any) => {
         onPress={() => openModal(item)} // Передаём функцию-обработчик
       />
     ));
-    setServerItemsPay(payItems);
+    if(subscription.isPaid){
+      setServerItemsPay([...payItems, ...freeItems]);
+    } else {
+      setServerItemsPay(payItems);
+    }
+    
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [regionItem, subscription]);
 
@@ -110,10 +115,14 @@ const Regions = ({ navigation }:any) => {
          {subscription.isPaid && <AdditionalRegions style={styles.additionalRegions} />}
           <ScrollView style={styles.scrollView}>
             <Text style={styles.blockTitle}>Regions</Text>
-            {serverItemsFree}
+            {!subscription.isPaid ?  serverItemsFree : serverItemsPay}
 
+           {!subscription.isPaid && 
+           <React.Fragment>
             <Text style={styles.blockTitle}>Plus Regions</Text>
             {serverItemsPay}
+            </React.Fragment>
+          }
           </ScrollView>
           {currentConnection ? (
             <>

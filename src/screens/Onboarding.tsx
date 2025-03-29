@@ -156,6 +156,12 @@ const Onboarding = ({ navigation }: any) => {
         // setFirstScreen(!userInfo.onBording ? 'Onboarding' : "MapScreen")
     }, [userInfo.onBording])
 
+    useEffect(() => {
+       if(userInfo.onBording){
+        navigation.navigate('MapScreen')
+       }
+    },[])
+
     return (
         <View style={styles.container}>
             <Progress.Bar
