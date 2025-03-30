@@ -53,7 +53,6 @@ const MapScreen = ({ navigation }) => {
     const readOvpnFile = async (filePath: any) => {
     try {
         // Проверяем, существует ли файл
-        console.log('readFile ', filePath)
         const fileExists = await RNFS.exists(filePath);
         if (!fileExists) {
             throw new Error('Файл не найден');
@@ -339,7 +338,7 @@ const connectVpn = async () => {
             "elementType": "geometry",
             "stylers": [
                 {
-                    "color": "#757575"
+                    "color": "#4a4a4a"
                 }
             ]
         },
@@ -447,8 +446,10 @@ const connectVpn = async () => {
                         status={regionInfo?.connectState}
                         isCountry={selectCountry}
                         text="Свайп!"
-                        onCompleteRight={() => connectVpn()}
-                        onCompleteLeft={() =>  stopOvpn()}
+                        onCompleteRight={connectVpn}
+                        // onCompleteRight={() => {}}
+                        onCompleteLeft={stopOvpn}
+                        // onCompleteLeft={() =>  {}}
                     />
                 </View>
             </View>
@@ -623,7 +624,6 @@ const styles = StyleSheet.create({
         marginLeft: 16,
         marginRight: 16,
         borderRadius: 190,
-        
     },
     dotMap: {
         // width: 30,

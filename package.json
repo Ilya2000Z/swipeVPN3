@@ -44,7 +44,7 @@
     "react-navigation": "^5.0.0",
     "react-redux": "^9.2.0",
     "redux": "^5.0.1",
-    "rn-swipe-button": "^2.0.0"
+    "rn-swipe-button": "^2.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
