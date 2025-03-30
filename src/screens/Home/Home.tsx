@@ -8,6 +8,7 @@ import Images from '../../assets/Images.ts';
 import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
 import {SelectCity} from '../BottomSheetContent.tsx';
 import {Colors} from "../../theme/Colors.ts";
+import { store } from '../../store/store.js';
 
 const regions: Region[] = [
     {
@@ -107,6 +108,8 @@ const Home = () => {
     const sheetRef = useRef<BottomSheet>(null);
     const [clickedRegion, setClickedRegion] = useState<Region>();
 
+    const state = store.getState();
+    const {subscription} = state;
     const onRegionClick = (region: Region) => {
         setClickedRegion(region);
         sheetRef.current?.snapToPosition('40%');
@@ -118,7 +121,7 @@ const Home = () => {
                 regions={regions} 
                 plusRegions={plusRegions} 
                 onRegionClick={onRegionClick}
-                isSubscriptionActive
+                isSubscriptionActive={subscription.isPaid}
             />
             <SwipeSlider
                 text="Свайп!"

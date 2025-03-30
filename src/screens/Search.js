@@ -19,6 +19,7 @@ import Animated, {
 	runOnJS,
 } from 'react-native-reanimated';
 import { setVpnItem } from '../store/serverinfo';
+import { store } from '../store/store';
 
 // import PL from '../assets/flags/PL.svg'
 // import US from '../assets/flags/US.svg'
@@ -36,6 +37,9 @@ const Search = () => {
 	const regionInfo = useSelector(state => state.regionInfo);
 	const navigate = useNavigation()
 	const dispatch = useDispatch()
+
+	const state = store.getState();
+	const {subscription} = state;
 
 
 	const findAndConvertVPN = (data, searchCriteria) => {
@@ -211,9 +215,10 @@ const Search = () => {
 								{filteredCountries.map((item, index) => (
 									<CountryItem
 										key={index}
-										isFree={false}
+										isFree={item.isFree}
 										more={true}
 										dot={true}
+										isSubscriptionActive={subscription.isPaid}
 										style={{ color: "#566379" }}
 										countryName={<HighlightText text={item.country} highlight={text} />}
 										flag={item.img}
@@ -233,7 +238,8 @@ const Search = () => {
 										// noFlag={true}
 										style={{ color: "#566379" }}
 										dot={true}
-										isFree={true}
+										isFree={item.isFree}
+										isSubscriptionActive={subscription.isPaid}
 										cityName={<HighlightText text={item.city} highlight={text} />}
 										flag={"https://s3.timeweb.cloud/b55ef052-94710705-5eba-493a-91af-683f77214b00/assets/map-pin.svg"}
 										width={'24'}
@@ -273,7 +279,7 @@ const Search = () => {
 					<View style={styles.modalBackground}>
 						<GestureDetector gesture={swipeDown}>
 							<Animated.View style={[styles.modal, animatedStyle]}>
-								<CitiesList countryName={selcetItemRgion} closeModal={closeModal} isSubscriptionActive />
+								<CitiesList countryName={selcetItemRgion} closeModal={closeModal} isSubscriptionActive={subscription.isPaid} />
 							</Animated.View>
 						</GestureDetector>
 					</View>
