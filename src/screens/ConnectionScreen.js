@@ -50,20 +50,18 @@ const ConnectionScreen = () => {
     }, [regionInfo.connectState]);
 
     useEffect(() => {
-        // Фоновый таймер
         BackgroundTimer.runBackgroundTimer(() => {
-            setCount(prevCount => {
-                const newCount = prevCount + 1;
-                setCount(newCount);
-                dispatch(setTimeConnect(newCount)); // Обновляем состояние через Redux
-                return newCount;
-            });
-        }, 1000); // 1 секунда
+            setCount(prevCount => prevCount + 1);
+        }, 1000);
 
         return () => {
-            BackgroundTimer.stopBackgroundTimer(); // Остановка таймера при размонтировании компонента
+            BackgroundTimer.stopBackgroundTimer();
         };
-    }, [dispatch]);
+    }, []);
+
+    useEffect(() => {
+        dispatch(setTimeConnect(count)); // Обновление Redux состояния отдельно
+    }, [count, dispatch]);
 
     // Анимационный стиль для обертки
     const animatedStyle = useAnimatedStyle(() => ({
