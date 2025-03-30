@@ -621,7 +621,7 @@ const styles = StyleSheet.create({
     },
     swipe: {
         backgroundColor: '#1C1F20',
-        width: '100%',
+        width: '90%',
         marginLeft: 10,
         marginRight: 16,
         borderRadius: 190,
