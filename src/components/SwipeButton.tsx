@@ -13,12 +13,12 @@ interface SwipeSliderProps {
 }
 
 const SwipeSlider: React.FC<SwipeSliderProps> = ({
-                                                     onCompleteRight,
-                                                     onCompleteLeft,
-                                                     text = 'Свайпните',
-                                                     status,
-                                                     isCountry
-                                                 }) => {
+     onCompleteRight,
+     onCompleteLeft,
+     text = 'Свайпните',
+     status,
+     isCountry
+}) => {
     const disabled = !Boolean(Object.keys(useSelector(state => state.regionInfo.vpnItem)).length);
     const screenWidth = Dimensions.get('window').width;
     const containerPadding = 10;
