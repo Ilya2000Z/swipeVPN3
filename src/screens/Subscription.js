@@ -11,11 +11,17 @@ import { useDispatch } from 'react-redux';
 import { updateSubscription } from '../store/modules/subscription';
 import { TRIAL_DATE } from '../store/modules/subscription';
 import { TouchableOpacity } from 'react-native';
+import { store } from '../store/store.js';
 
 const Subscription = ({ navigation }) => {
     const { width, height } = Dimensions.get('window');
     const [select, setSelect] = useState(null);
     const dispatch = useDispatch();
+
+    const state = store.getState();
+    const { subscription } = state;
+
+    const withCloseBtn = subscription.subscriptionType !== 'onboarding'
 
     const selectHendler = (type) => {
         setSelect(type);
@@ -53,14 +59,32 @@ const Subscription = ({ navigation }) => {
         navigation.navigate('MapScreen');
     };
 
+    const handleGoBack = () => {
+        const routes = navigation.getState()?.routes;
+        const previousRoute = routes[routes.length - 1]; // Получаем предыдущий маршрут
+        
+        if (previousRoute?.name === 'Onboarding') {
+
+            navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: 'MapScreen' }],
+                })
+            );
+        } else {
+
+            navigation.goBack();
+        }
+    };
+
     return (
         <View style={styles.container}>
             <TouchableOpacity>
-                <ImageBackground style={[styles.background, { width, height }]}  resizeMode="cover" source={SubscriptionBackground} />
+                <ImageBackground style={[styles.background, { width, height }]} resizeMode="cover" source={SubscriptionBackground} />
             </TouchableOpacity>
-               
+
             <ScrollView style={styles.wrapper}>
-                <BaseButton style={styles.exit} theme='exit' />
+                {withCloseBtn && <BaseButton style={styles.exit} theme='exit' onPress={handleGoBack} />}
                 <View style={styles.block}>
                     <Text style={styles.title}>Freedom is at your fingertips</Text>
                     <View style={styles.listWrapper}>
@@ -91,12 +115,13 @@ const Subscription = ({ navigation }) => {
                     </View>
                 </View>
                 <View style={styles.subscriptionItems}>
-                    <SubscriptionOption
-                        title='Trial period'
-                        subtitle={`${TRIAL_DATE} days`}
-                        onPress={() => selectHendler('trial')}
-                        isActive={select === 'trial'}
-                    />
+                    {subscription.subscriptionType === 'onboarding' &&
+                        <SubscriptionOption
+                            title='Trial period'
+                            subtitle={`${TRIAL_DATE} days`}
+                            onPress={() => selectHendler('trial')}
+                            isActive={select === 'trial'}
+                        />}
                     <SubscriptionOption
                         title='1 month'
                         sideText='Popular'

@@ -13,6 +13,7 @@ import { setDeviceId } from './store/devaceinfo.js';
 import { setDefaultIp, setRegionInformation, setServerItems, setDefailtVpn, setDefaultRegion } from './store/serverinfo.js';
 import axios from "axios";
 import { setOnbording, setUserId } from './store/user.js';
+import { updateSubscription } from './store/modules/subscription/index.ts';
 
 function MainApp(): React.JSX.Element {
     const dispatch = useDispatch();
@@ -52,7 +53,15 @@ function MainApp(): React.JSX.Element {
     const fetchUser = async (deviceID: string) => {
         try {
             const response = await axios.post(`${API_URL}/check-user`, { deviceid: deviceID });
+            const date_onbording = new Date('2025-04-15') //response.data.date_onbording
+            
             dispatch(setOnbording(response.data.exists));
+            dispatch(updateSubscription({
+                subscriptionType: response.data.exists ? "trial" : 'onboarding',  // response.data.subscriptionType
+                isExpired: new Date() >  date_onbording,
+                isPaid: false,
+                subcriptionExpiredAt: date_onbording.toISOString()
+            }))
             console.log("Ответ от сервера:", response.data);
         } catch (error) {
             console.error("Ошибка при проверке пользователя:", error);

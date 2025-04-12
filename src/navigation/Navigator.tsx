@@ -151,11 +151,10 @@ const Navigator = () => {
     useEffect(()=> {
         setFirstScreen(!userInfo.onBording ? 'Onboarding' : "MapScreen")
     }, [userInfo.onBording])
+
+    console.log('userInfo',userInfo)
     return (
     <NavigationContainer>
-        {/*<Stack.Navigator>*/}
-        {/*    <Stack.Screen name="Onboarding" component={Onboarding}/>*/}
-        {/*</Stack.Navigator>*/}
         <Drawer.Navigator screenOptions={{
             headerLeft: (_) => <HeaderLeft />,
             headerRight: (_) => <HeaderRight />,
@@ -171,18 +170,18 @@ const Navigator = () => {
                 fontWeight: 'bold',
             },
         }} drawerContent={(props) => <CustomDrawerContent {...props} /> } initialRouteName={ !userInfo.onBording ? 'Onboarding' : "MapScreen" } >
-            <Drawer.Screen options={{
+           {!userInfo.onBording && <Drawer.Screen options={{
                 headerLeft: () => null, // Скрыть headerLeft
                 headerRight: () => null, // Скрыть headerRight
                 headerTitle: () => null,
                 headerShown: false,
-            }} name="Onboarding" component={Onboarding} />
-            <Drawer.Screen options={{
+            }} name="Onboarding" component={Onboarding} />}
+            {!userInfo.onBording && <Drawer.Screen options={{
                 headerLeft: () => null, // Скрыть headerLeft
                
                 headerTitle: () => null,
                 headerShown: false,
-            }} name="OnboardFinish" component={OnboardFinish} />
+            }} name="OnboardFinish" component={OnboardFinish} />}
             {/* <Drawer.Screen options={{
                 title: 'SwipeVPN',
                 headerRight: () => null, // Скрыть headerRight

@@ -3,7 +3,7 @@ import { SubscriptionState } from './type';
 
 
 export const SubscriptionDefaultState: SubscriptionState = {
-   subscriptionType: 'trial',
+   subscriptionType: 'onboarding',
    subcriptionExpiredAt: '',
    isExpired: false,
    isPaid: false,
@@ -12,7 +12,7 @@ export const SubscriptionDefaultState: SubscriptionState = {
 export const subscription = createSlice({
     name: 'Subscription',
     initialState: {
-        subscriptionType: 'trial',
+        subscriptionType: 'onboarding',
         subcriptionExpiredAt: '',
         isExpired: false,
         isPaid: false,

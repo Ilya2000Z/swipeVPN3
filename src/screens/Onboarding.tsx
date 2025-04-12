@@ -160,7 +160,8 @@ const Onboarding = ({ navigation }: any) => {
        if(userInfo.onBording){
         navigation.navigate('MapScreen')
        }
-    },[])
+    },
+    [userInfo.onBording])
 
     return (
         <View style={styles.container}>
