@@ -14,6 +14,7 @@ import { setDefaultIp, setRegionInformation, setServerItems, setDefailtVpn, setD
 import axios from "axios";
 import { setOnbording, setUserId } from './store/user.js';
 import { updateSubscription } from './store/modules/subscription/index.ts';
+import SplashScreen from './screens/SplashScreen/index.jsx';
 
 function MainApp(): React.JSX.Element {
     const dispatch = useDispatch();
@@ -104,9 +105,7 @@ function MainApp(): React.JSX.Element {
             <PaperProvider>
                 <StatusBar backgroundColor={Colors.mainBackground} />
                 {loading ? (
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
-                        <ActivityIndicator size="large" color="#E7FE55" />
-                    </View>
+                    <SplashScreen/>
                 ) : (
                     <Navigator />
                 )}
