@@ -43,13 +43,14 @@ const MapScreen = ({ navigation }) => {
     });
     const [selectCountry, setSelectCountry] = useState(false)
     const [stateConnect, setStateConnect] = useState(false);
-    const [clientName, setClientName] = useState('');
+    // const [clientName, setClientName] = useState('');
     const [serverIp, setServerIp] = useState('');
     const [isDownloading, setIsDownloading] = useState(false);
-    const isIPhone = Platform.OS === 'ios';
+    // const isIPhone = Platform.OS === 'ios';
     const [vpnState, setVpnState] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
     const [isMapLoaded, setIsMapLoaded] = useState(false);
+
     const readOvpnFile = async (filePath: any) => {
     try {
         // Проверяем, существует ли файл

@@ -15,12 +15,25 @@ import axios from "axios";
 import { setOnbording, setUserId } from './store/user.js';
 import { updateSubscription } from './store/modules/subscription/index.ts';
 import SplashScreen from './screens/SplashScreen/index.jsx';
+import { getApp, initializeApp } from 'firebase/app';
+import '@react-native-firebase/analytics';
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDEMk9uw1SFQ3VlULcV9tC2uWdKOgjcnL8",
+    projectId: "sample-firebase-ai-app-510ab",
+    appId: "1:626303996097:android:d6af73a5bb06292edc8440",
+    messagingSenderId: "626303996097",
+    storageBucket: "sample-firebase-ai-app-510ab.appspot.com",
+  };
+
+
+initializeApp(firebaseConfig)
 
 function MainApp(): React.JSX.Element {
     const dispatch = useDispatch();
     const API_URL = "http://93.183.81.113:8080";
     const [loading, setLoading] = useState(true);
-
+   
     async function getCoordinates(ip: string) {
         const response = await fetch(`http://ip-api.com/json/${ip}`);
         const data = await response.json();
@@ -100,21 +113,30 @@ function MainApp(): React.JSX.Element {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch]);
 
+   
+
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
             <PaperProvider>
                 <StatusBar backgroundColor={Colors.mainBackground} />
-                {loading ? (
-                    <SplashScreen/>
-                ) : (
-                    <Navigator />
-                )}
+                {loading ? <SplashScreen/> : <Navigator />}
             </PaperProvider>
         </GestureHandlerRootView>
     );
 }
 
 function App(): React.JSX.Element {
+    
+    useEffect(() => {
+        if (!getApp().options) {
+            initializeApp(firebaseConfig);
+            console.log('Firebase App initialized');
+          } else {
+            console.log(getApp())
+            console.log('Firebase App already initialized');
+          }        
+    },[])
+
     return (
         <Provider store={store}>
             <MainApp />

@@ -60,7 +60,7 @@ const Regions = ({ navigation }:any) => {
         countryName={item.country}
         cityName={item.city}
         flag={item.img}
-        isSubscriptionActive={subscription.isPaid}
+        isSubscriptionActive
         onPress={() => selectVpn(item.id)} // Передаём функцию-обработчик
       />
     ));

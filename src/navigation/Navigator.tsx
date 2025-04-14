@@ -152,7 +152,6 @@ const Navigator = () => {
         setFirstScreen(!userInfo.onBording ? 'Onboarding' : "MapScreen")
     }, [userInfo.onBording])
 
-    console.log('userInfo',userInfo)
     return (
     <NavigationContainer>
         <Drawer.Navigator screenOptions={{

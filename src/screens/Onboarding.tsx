@@ -16,9 +16,10 @@ import Video from '../assets/svg/onboarding/Video';
 import Wifi from '../assets/svg/onboarding/Wifi';
 import Wireless from '../assets/svg/onboarding/Wireless';
 import { Colors } from "../theme/Colors.ts";
-import { useNavigation } from '@react-navigation/native';
-import OnboardFinish from "./OnboardFinish.tsx"
 import { useSelector } from 'react-redux';
+import { getAnalytics, logEvent } from '@react-native-firebase/analytics';
+import { getApp } from '@react-native-firebase/app';
+
 
 type Answers = {
     name: string,
@@ -138,8 +139,30 @@ const Onboarding = ({ navigation }: any) => {
     const progress = (currentStep + 1) / questions.length;
     const userInfo = useSelector((state: any) => state.user);
 
-    const handleNext = () => {
+    const sendAnalytics = async (question:any, value:undefined | string) => {
+        try {
+            const app = getApp()
+            console.log(app)
+            const analytics = getAnalytics(app)
+            console.log(app)
+            if(!analytics)
+            {
+                return 
+            }
+            await logEvent(analytics,'onboarding_next', {
+                item_id: question,
+                item_name: value,
+                content_type: 'onboarding',
+              });
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    const handleNext = async () => {
         if (currentStep < questions.length - 1) {
+            const answer = currentQuestion.answers[Number(checked)]?.name
+            await sendAnalytics(currentQuestion.question , answer)
             setCurrentStep(currentStep + 1);
             setChecked(undefined);
         } else {
@@ -168,7 +191,7 @@ const Onboarding = ({ navigation }: any) => {
             <Progress.Bar
                 width={400}
                 borderColor={'gray'}
-                color={Colors.mainColor}
+                color={Colors?.mainColor}
                 style={styles.progress}
                 progress={progress}
             />
@@ -184,14 +207,14 @@ const Onboarding = ({ navigation }: any) => {
                                 {GetSvg(item.icon)}
                                 <Text style={{ color: 'white', marginStart: 5 }}>{item.name}</Text>
                             </View>
-                            <RadioButton borderColor={Colors.mainColor} containerStyle={{ borderRadius: 12, backgroundColor: '#E7FE55' }} borderSize={1} id={index.toString()} onPress={setChecked} selected={index.toString() === checked} />
+                            <RadioButton borderColor={Colors?.mainColor} containerStyle={{ borderRadius: 12, backgroundColor: '#E7FE55' }} borderSize={1} id={index.toString()} onPress={setChecked} selected={index.toString() === checked} />
                         </View>
                     </TouchableOpacity>
                 )}
             />
             <TouchableOpacity style={{ width: '100%', flex: 1, paddingStart: 20, paddingEnd: 20 }} onPress={handleNext} disabled={checked === undefined}>
-                <View style={{ width: '100%', height: 50, marginBottom: 100, borderRadius: 18, backgroundColor: checked === undefined ? 'gray' : Colors.mainColor, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ color: Colors.mainBackground, fontSize: 25 }}>Continue</Text>
+                <View style={{ width: '100%', height: 50, marginBottom: 100, borderRadius: 18, backgroundColor: checked === undefined ? 'gray' : Colors?.mainColor, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={{ color: Colors?.mainBackground, fontSize: 25 }}>Continue</Text>
                 </View>
             </TouchableOpacity>
         </View>
